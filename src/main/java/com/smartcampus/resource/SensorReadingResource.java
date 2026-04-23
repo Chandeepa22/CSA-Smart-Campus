@@ -26,7 +26,7 @@ public class SensorReadingResource {
 
     @GET
     public List<SensorReading> getReadings() {
-        return DataStore.getInstance().getReadings().getOrDefault(sensorId, new ArrayList<>());
+        return DataStore.getInstance().getReadings(sensorId);
     }
 
     @POST
@@ -44,9 +44,7 @@ public class SensorReadingResource {
         sensor.setCurrentValue(reading.getValue());
         
         // Store reading
-        DataStore.getInstance().getReadings()
-                .computeIfAbsent(sensorId, k -> new ArrayList<>())
-                .add(reading);
+        DataStore.getInstance().addReading(sensorId, reading);
         
         return Response.status(Response.Status.CREATED).entity(reading).build();
     }
