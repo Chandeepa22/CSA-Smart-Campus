@@ -40,7 +40,7 @@ Smart-Campus/
 
 1. **Clone and Build:**
    ```bash
-   git clone https://github.com/chandeepa22/Smart-Campus.git
+   git clone https://github.com/Chandeepa22/CSA-Smart-Campus
    cd Smart-Campus
    mvn clean package
    ```
