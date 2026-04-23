@@ -40,10 +40,10 @@ public class SensorResource {
         if (room == null) {
             throw new LinkedResourceNotFoundException("Room with ID " + sensor.getRoomId() + " not found.");
         }
-        
+
         DataStore.getInstance().getSensors().put(sensor.getId(), sensor);
         room.getSensorIds().add(sensor.getId());
-        
+
         return Response.status(Response.Status.CREATED).entity(sensor).build();
     }
 

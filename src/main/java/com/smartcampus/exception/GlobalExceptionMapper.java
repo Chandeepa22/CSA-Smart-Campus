@@ -15,7 +15,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable exception) {
         LOGGER.log(Level.SEVERE, "An unexpected error occurred", exception);
-        
+
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(Map.of("error", "INTERNAL_SERVER_ERROR", "message", "An unexpected error occurred."))
                 .type(MediaType.APPLICATION_JSON)
