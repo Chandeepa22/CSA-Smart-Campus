@@ -1,0 +1,17 @@
+target/
+*.class
+*.war
+*.ear
+*.jar
+.settings/
+.project
+.classpath
+.nb-gradle/
+nb-configuration.xml
+nbactions.xml
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
