@@ -1,19 +1,57 @@
 # Smart Campus — Sensor & Room Management API
 
-A RESTful API built with JAX-RS (Jersey) and Grizzly for managing rooms and sensors across a university campus.
+A RESTful API built with JAX-RS (Jersey) and deployed on **Apache Tomcat / TomEE** for managing rooms and sensors across a university campus.
+
+## Project Structure
+
+```text
+Smart-Campus/
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── java/com/smartcampus/
+│   │   │   ├── AppConfig.java              # JAX-RS Application configuration
+│   │   │   ├── model/                      # Data models (POJOs)
+│   │   │   │   ├── Room.java
+│   │   │   │   ├── Sensor.java
+│   │   │   │   └── SensorReading.java
+│   │   │   ├── store/                      # In-memory singleton DataStore
+│   │   │   │   └── DataStore.java
+│   │   │   ├── resource/                   # REST Endpoints
+│   │   │   │   ├── DiscoveryResource.java
+│   │   │   │   ├── RoomResource.java
+│   │   │   │   ├── SensorResource.java
+│   │   │   │   └── SensorReadingResource.java
+│   │   │   ├── exception/                  # Error handling & mappers
+│   │   │   │   ├── GlobalExceptionMapper.java
+│   │   │   │   ├── RoomNotEmptyMapper.java
+│   │   │   │   └── ...
+│   │   │   └── filter/                     # Logging & Request filters
+│   │   │       └── LoggingFilter.java
+│   │   └── webapp/                         # Web configuration
+│   │       ├── WEB-INF/web.xml             # Jersey Servlet mapping
+│   │       └── META-INF/context.xml        # Tomcat context path
+└── README.md
+```
 
 ## How to build and run
 
-**Requirements:** Java 11+, Maven 3.6+
+**Requirements:** Java 11+, Maven 3.6+, Apache Tomcat 9.0+
 
-```bash
-git clone https://github.com/YOUR_USERNAME/Smart-Campus.git
-cd Smart-Campus
-mvn clean package
-java -jar target/smart-campus-1.0-SNAPSHOT.jar
-```
+1. **Clone and Build:**
+   ```bash
+   git clone https://github.com/chandeepa22/Smart-Campus.git
+   cd Smart-Campus
+   mvn clean package
+   ```
 
-The server starts at `http://localhost:8080/api/v1`
+2. **Deploy:**
+   - Copy the generated `target/smart-campus.war` file.
+   - Paste it into your Tomcat `webapps/` directory.
+   - Start your Tomcat server.
+
+3. **Access:**
+   The server will be available at: `http://localhost:8080/smart-campus/api/v1`
 
 ---
 
@@ -21,28 +59,28 @@ The server starts at `http://localhost:8080/api/v1`
 
 ```bash
 # 1. Discovery
-curl http://localhost:8080/api/v1
+curl http://localhost:8080/smart-campus/api/v1
 
 # 2. Create a room
-curl -X POST http://localhost:8080/api/v1/rooms \
+curl -X POST http://localhost:8080/smart-campus/api/v1/rooms \
   -H "Content-Type: application/json" \
   -d '{"id":"LIB-301","name":"Library Study Room","capacity":30}'
 
 # 3. Create a sensor
-curl -X POST http://localhost:8080/api/v1/sensors \
+curl -X POST http://localhost:8080/smart-campus/api/v1/sensors \
   -H "Content-Type: application/json" \
-  -d '{"id":"CO2-001","type":"CO2","status":"ACTIVE","currentValue":400,"roomId":"LIB-301"}'
+  -d '{"id":"CO2-001","type":"CO2","status":"ACTIVE","roomId":"LIB-301"}'
 
 # 4. Filter sensors by type
-curl "http://localhost:8080/api/v1/sensors?type=CO2"
+curl "http://localhost:8080/smart-campus/api/v1/sensors?type=CO2"
 
 # 5. Post a sensor reading
-curl -X POST http://localhost:8080/api/v1/sensors/CO2-001/readings \
+curl -X POST http://localhost:8080/smart-campus/api/v1/sensors/CO2-001/readings \
   -H "Content-Type: application/json" \
   -d '{"value":520.5}'
 
 # 6. Try deleting a room that has sensors (expect 409)
-curl -X DELETE http://localhost:8080/api/v1/rooms/LIB-301
+curl -X DELETE http://localhost:8080/smart-campus/api/v1/rooms/LIB-301
 ```
 
 ---
