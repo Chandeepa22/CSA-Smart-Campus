@@ -65,4 +65,49 @@ public class SensorResource {
         }
         return new SensorReadingResource(sensorId);
     }
+
+    @PUT
+    @Path("/{sensorId}")
+    public Response updateSensor(@PathParam("sensorId") String sensorId, Sensor updated) {
+        if (updated == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(java.util.Map.of("error", "BAD_REQUEST", "message", "Sensor data is required."))
+                    .build();
+        }
+        if (!DataStore.getInstance().getSensors().containsKey(sensorId)) {
+            throw new NotFoundException("Sensor not found with ID: " + sensorId);
+        }
+        DataStore.getInstance().getSensors().put(sensorId, updated);
+        return Response.ok(updated).build();
+    }
+
+    @PATCH
+    @Path("/{sensorId}")
+    public Response patchSensor(@PathParam("sensorId") String sensorId, Sensor partialUpdate) {
+        Sensor sensor = DataStore.getInstance().getSensors().get(sensorId);
+        if (sensor == null) {
+            throw new NotFoundException("Sensor not found with ID: " + sensorId);
+        }
+        if (partialUpdate.getStatus() != null) {
+            sensor.setStatus(partialUpdate.getStatus());
+        }
+        if (partialUpdate.getType() != null) {
+            sensor.setType(partialUpdate.getType());
+        }
+        return Response.ok(sensor).build();
+    }
+
+    @DELETE
+    @Path("/{sensorId}")
+    public Response deleteSensor(@PathParam("sensorId") String sensorId) {
+        Sensor s = DataStore.getInstance().getSensors().remove(sensorId);
+        if (s == null) {
+            throw new NotFoundException("Sensor not found with ID: " + sensorId);
+        }
+        Room r = DataStore.getInstance().getRooms().get(s.getRoomId());
+        if (r != null) {
+            r.getSensorIds().remove(sensorId);
+        }
+        return Response.noContent().build();
+    }
 }
